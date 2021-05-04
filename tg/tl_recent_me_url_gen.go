@@ -817,12 +817,15 @@ type RecentMeURLClass interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() RecentMeURLClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -884,6 +887,11 @@ func DecodeRecentMeURL(buf *bin.Buffer) (RecentMeURLClass, error) {
 // RecentMeURL boxes the RecentMeURLClass providing a helper.
 type RecentMeURLBox struct {
 	RecentMeUrl RecentMeURLClass
+}
+
+// TypeInfo implements tdp.Object for RecentMeURLBox.
+func (b *RecentMeURLBox) TypeInfo() tdp.Type {
+	return b.RecentMeUrl.TypeInfo()
 }
 
 // Decode implements bin.Decoder for RecentMeURLBox.

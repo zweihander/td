@@ -396,12 +396,15 @@ type MessagesRecentStickersClass interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() MessagesRecentStickersClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -452,6 +455,11 @@ func DecodeMessagesRecentStickers(buf *bin.Buffer) (MessagesRecentStickersClass,
 // MessagesRecentStickers boxes the MessagesRecentStickersClass providing a helper.
 type MessagesRecentStickersBox struct {
 	RecentStickers MessagesRecentStickersClass
+}
+
+// TypeInfo implements tdp.Object for MessagesRecentStickersBox.
+func (b *MessagesRecentStickersBox) TypeInfo() tdp.Type {
+	return b.RecentStickers.TypeInfo()
 }
 
 // Decode implements bin.Decoder for MessagesRecentStickersBox.

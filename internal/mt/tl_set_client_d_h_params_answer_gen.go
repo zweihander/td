@@ -578,12 +578,15 @@ type SetClientDHParamsAnswerClass interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() SetClientDHParamsAnswerClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -634,6 +637,11 @@ func DecodeSetClientDHParamsAnswer(buf *bin.Buffer) (SetClientDHParamsAnswerClas
 // SetClientDHParamsAnswer boxes the SetClientDHParamsAnswerClass providing a helper.
 type SetClientDHParamsAnswerBox struct {
 	Set_client_DH_params_answer SetClientDHParamsAnswerClass
+}
+
+// TypeInfo implements tdp.Object for SetClientDHParamsAnswerBox.
+func (b *SetClientDHParamsAnswerBox) TypeInfo() tdp.Type {
+	return b.Set_client_DH_params_answer.TypeInfo()
 }
 
 // Decode implements bin.Decoder for SetClientDHParamsAnswerBox.

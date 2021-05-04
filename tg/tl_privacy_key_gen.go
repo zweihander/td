@@ -873,12 +873,15 @@ type PrivacyKeyClass interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() PrivacyKeyClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -958,6 +961,11 @@ func DecodePrivacyKey(buf *bin.Buffer) (PrivacyKeyClass, error) {
 // PrivacyKey boxes the PrivacyKeyClass providing a helper.
 type PrivacyKeyBox struct {
 	PrivacyKey PrivacyKeyClass
+}
+
+// TypeInfo implements tdp.Object for PrivacyKeyBox.
+func (b *PrivacyKeyBox) TypeInfo() tdp.Type {
+	return b.PrivacyKey.TypeInfo()
 }
 
 // Decode implements bin.Decoder for PrivacyKeyBox.

@@ -445,12 +445,15 @@ type PeerClass interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() PeerClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -503,6 +506,11 @@ func DecodePeer(buf *bin.Buffer) (PeerClass, error) {
 // Peer boxes the PeerClass providing a helper.
 type PeerBox struct {
 	Peer PeerClass
+}
+
+// TypeInfo implements tdp.Object for PeerBox.
+func (b *PeerBox) TypeInfo() tdp.Type {
+	return b.Peer.TypeInfo()
 }
 
 // Decode implements bin.Decoder for PeerBox.

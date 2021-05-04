@@ -377,12 +377,15 @@ type MessagesChatsClass interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() MessagesChatsClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -425,6 +428,11 @@ func DecodeMessagesChats(buf *bin.Buffer) (MessagesChatsClass, error) {
 // MessagesChats boxes the MessagesChatsClass providing a helper.
 type MessagesChatsBox struct {
 	Chats MessagesChatsClass
+}
+
+// TypeInfo implements tdp.Object for MessagesChatsBox.
+func (b *MessagesChatsBox) TypeInfo() tdp.Type {
+	return b.Chats.TypeInfo()
 }
 
 // Decode implements bin.Decoder for MessagesChatsBox.

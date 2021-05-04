@@ -312,12 +312,15 @@ type HelpPassportConfigClass interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() HelpPassportConfigClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -368,6 +371,11 @@ func DecodeHelpPassportConfig(buf *bin.Buffer) (HelpPassportConfigClass, error) 
 // HelpPassportConfig boxes the HelpPassportConfigClass providing a helper.
 type HelpPassportConfigBox struct {
 	PassportConfig HelpPassportConfigClass
+}
+
+// TypeInfo implements tdp.Object for HelpPassportConfigBox.
+func (b *HelpPassportConfigBox) TypeInfo() tdp.Type {
+	return b.PassportConfig.TypeInfo()
 }
 
 // Decode implements bin.Decoder for HelpPassportConfigBox.

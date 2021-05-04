@@ -336,12 +336,15 @@ type InputThemeClass interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() InputThemeClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -379,6 +382,11 @@ func DecodeInputTheme(buf *bin.Buffer) (InputThemeClass, error) {
 // InputTheme boxes the InputThemeClass providing a helper.
 type InputThemeBox struct {
 	InputTheme InputThemeClass
+}
+
+// TypeInfo implements tdp.Object for InputThemeBox.
+func (b *InputThemeBox) TypeInfo() tdp.Type {
+	return b.InputTheme.TypeInfo()
 }
 
 // Decode implements bin.Decoder for InputThemeBox.

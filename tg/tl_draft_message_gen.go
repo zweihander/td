@@ -539,12 +539,15 @@ type DraftMessageClass interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() DraftMessageClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -595,6 +598,11 @@ func DecodeDraftMessage(buf *bin.Buffer) (DraftMessageClass, error) {
 // DraftMessage boxes the DraftMessageClass providing a helper.
 type DraftMessageBox struct {
 	DraftMessage DraftMessageClass
+}
+
+// TypeInfo implements tdp.Object for DraftMessageBox.
+func (b *DraftMessageBox) TypeInfo() tdp.Type {
+	return b.DraftMessage.TypeInfo()
 }
 
 // Decode implements bin.Decoder for DraftMessageBox.

@@ -1026,12 +1026,15 @@ type PrivacyRuleClass interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() PrivacyRuleClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -1127,6 +1130,11 @@ func DecodePrivacyRule(buf *bin.Buffer) (PrivacyRuleClass, error) {
 // PrivacyRule boxes the PrivacyRuleClass providing a helper.
 type PrivacyRuleBox struct {
 	PrivacyRule PrivacyRuleClass
+}
+
+// TypeInfo implements tdp.Object for PrivacyRuleBox.
+func (b *PrivacyRuleBox) TypeInfo() tdp.Type {
+	return b.PrivacyRule.TypeInfo()
 }
 
 // Decode implements bin.Decoder for PrivacyRuleBox.

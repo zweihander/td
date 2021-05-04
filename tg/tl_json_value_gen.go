@@ -844,12 +844,15 @@ type JSONValueClass interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() JSONValueClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -915,6 +918,11 @@ func DecodeJSONValue(buf *bin.Buffer) (JSONValueClass, error) {
 // JSONValue boxes the JSONValueClass providing a helper.
 type JSONValueBox struct {
 	JSONValue JSONValueClass
+}
+
+// TypeInfo implements tdp.Object for JSONValueBox.
+func (b *JSONValueBox) TypeInfo() tdp.Type {
+	return b.JSONValue.TypeInfo()
 }
 
 // Decode implements bin.Decoder for JSONValueBox.

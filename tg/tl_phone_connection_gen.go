@@ -608,12 +608,15 @@ type PhoneConnectionClass interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() PhoneConnectionClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -663,6 +666,11 @@ func DecodePhoneConnection(buf *bin.Buffer) (PhoneConnectionClass, error) {
 // PhoneConnection boxes the PhoneConnectionClass providing a helper.
 type PhoneConnectionBox struct {
 	PhoneConnection PhoneConnectionClass
+}
+
+// TypeInfo implements tdp.Object for PhoneConnectionBox.
+func (b *PhoneConnectionBox) TypeInfo() tdp.Type {
+	return b.PhoneConnection.TypeInfo()
 }
 
 // Decode implements bin.Decoder for PhoneConnectionBox.

@@ -869,12 +869,15 @@ type ReportReasonClass interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() ReportReasonClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -954,6 +957,11 @@ func DecodeReportReason(buf *bin.Buffer) (ReportReasonClass, error) {
 // ReportReason boxes the ReportReasonClass providing a helper.
 type ReportReasonBox struct {
 	ReportReason ReportReasonClass
+}
+
+// TypeInfo implements tdp.Object for ReportReasonBox.
+func (b *ReportReasonBox) TypeInfo() tdp.Type {
+	return b.ReportReason.TypeInfo()
 }
 
 // Decode implements bin.Decoder for ReportReasonBox.

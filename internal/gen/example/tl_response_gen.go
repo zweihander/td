@@ -310,12 +310,15 @@ type ResponseClass interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() ResponseClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -353,6 +356,11 @@ func DecodeResponse(buf *bin.Buffer) (ResponseClass, error) {
 // Response boxes the ResponseClass providing a helper.
 type ResponseBox struct {
 	Response ResponseClass
+}
+
+// TypeInfo implements tdp.Object for ResponseBox.
+func (b *ResponseBox) TypeInfo() tdp.Type {
+	return b.Response.TypeInfo()
 }
 
 // Decode implements bin.Decoder for ResponseBox.

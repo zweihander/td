@@ -250,12 +250,15 @@ type BoolClass interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() BoolClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -293,6 +296,11 @@ func DecodeBool(buf *bin.Buffer) (BoolClass, error) {
 // Bool boxes the BoolClass providing a helper.
 type BoolBox struct {
 	Bool BoolClass
+}
+
+// TypeInfo implements tdp.Object for BoolBox.
+func (b *BoolBox) TypeInfo() tdp.Type {
+	return b.Bool.TypeInfo()
 }
 
 // Decode implements bin.Decoder for BoolBox.

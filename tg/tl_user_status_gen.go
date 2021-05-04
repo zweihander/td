@@ -724,12 +724,15 @@ type UserStatusClass interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() UserStatusClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -795,6 +798,11 @@ func DecodeUserStatus(buf *bin.Buffer) (UserStatusClass, error) {
 // UserStatus boxes the UserStatusClass providing a helper.
 type UserStatusBox struct {
 	UserStatus UserStatusClass
+}
+
+// TypeInfo implements tdp.Object for UserStatusBox.
+func (b *UserStatusBox) TypeInfo() tdp.Type {
+	return b.UserStatus.TypeInfo()
 }
 
 // Decode implements bin.Decoder for UserStatusBox.

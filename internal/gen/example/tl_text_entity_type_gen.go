@@ -1870,12 +1870,15 @@ type TextEntityTypeClass interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() TextEntityTypeClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -2018,6 +2021,11 @@ func DecodeTextEntityType(buf *bin.Buffer) (TextEntityTypeClass, error) {
 // TextEntityType boxes the TextEntityTypeClass providing a helper.
 type TextEntityTypeBox struct {
 	TextEntityType TextEntityTypeClass
+}
+
+// TypeInfo implements tdp.Object for TextEntityTypeBox.
+func (b *TextEntityTypeBox) TypeInfo() tdp.Type {
+	return b.TextEntityType.TypeInfo()
 }
 
 // Decode implements bin.Decoder for TextEntityTypeBox.

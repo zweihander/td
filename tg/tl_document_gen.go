@@ -641,12 +641,15 @@ type DocumentClass interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() DocumentClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -720,6 +723,11 @@ func DecodeDocument(buf *bin.Buffer) (DocumentClass, error) {
 // Document boxes the DocumentClass providing a helper.
 type DocumentBox struct {
 	Document DocumentClass
+}
+
+// TypeInfo implements tdp.Object for DocumentBox.
+func (b *DocumentBox) TypeInfo() tdp.Type {
+	return b.Document.TypeInfo()
 }
 
 // Decode implements bin.Decoder for DocumentBox.

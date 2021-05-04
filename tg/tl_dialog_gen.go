@@ -887,12 +887,15 @@ type DialogClass interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() DialogClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -949,6 +952,11 @@ func DecodeDialog(buf *bin.Buffer) (DialogClass, error) {
 // Dialog boxes the DialogClass providing a helper.
 type DialogBox struct {
 	Dialog DialogClass
+}
+
+// TypeInfo implements tdp.Object for DialogBox.
+func (b *DialogBox) TypeInfo() tdp.Type {
+	return b.Dialog.TypeInfo()
 }
 
 // Decode implements bin.Decoder for DialogBox.

@@ -371,12 +371,15 @@ type InputGameClass interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() InputGameClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -414,6 +417,11 @@ func DecodeInputGame(buf *bin.Buffer) (InputGameClass, error) {
 // InputGame boxes the InputGameClass providing a helper.
 type InputGameBox struct {
 	InputGame InputGameClass
+}
+
+// TypeInfo implements tdp.Object for InputGameBox.
+func (b *InputGameBox) TypeInfo() tdp.Type {
+	return b.InputGame.TypeInfo()
 }
 
 // Decode implements bin.Decoder for InputGameBox.

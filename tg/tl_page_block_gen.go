@@ -5224,12 +5224,15 @@ type PageBlockClass interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() PageBlockClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -5456,6 +5459,11 @@ func DecodePageBlock(buf *bin.Buffer) (PageBlockClass, error) {
 // PageBlock boxes the PageBlockClass providing a helper.
 type PageBlockBox struct {
 	PageBlock PageBlockClass
+}
+
+// TypeInfo implements tdp.Object for PageBlockBox.
+func (b *PageBlockBox) TypeInfo() tdp.Type {
+	return b.PageBlock.TypeInfo()
 }
 
 // Decode implements bin.Decoder for PageBlockBox.

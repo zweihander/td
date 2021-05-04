@@ -439,12 +439,15 @@ type InputSecureFileClass interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() InputSecureFileClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -494,6 +497,11 @@ func DecodeInputSecureFile(buf *bin.Buffer) (InputSecureFileClass, error) {
 // InputSecureFile boxes the InputSecureFileClass providing a helper.
 type InputSecureFileBox struct {
 	InputSecureFile InputSecureFileClass
+}
+
+// TypeInfo implements tdp.Object for InputSecureFileBox.
+func (b *InputSecureFileBox) TypeInfo() tdp.Type {
+	return b.InputSecureFile.TypeInfo()
 }
 
 // Decode implements bin.Decoder for InputSecureFileBox.

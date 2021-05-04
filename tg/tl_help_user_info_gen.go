@@ -376,12 +376,15 @@ type HelpUserInfoClass interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() HelpUserInfoClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -432,6 +435,11 @@ func DecodeHelpUserInfo(buf *bin.Buffer) (HelpUserInfoClass, error) {
 // HelpUserInfo boxes the HelpUserInfoClass providing a helper.
 type HelpUserInfoBox struct {
 	UserInfo HelpUserInfoClass
+}
+
+// TypeInfo implements tdp.Object for HelpUserInfoBox.
+func (b *HelpUserInfoBox) TypeInfo() tdp.Type {
+	return b.UserInfo.TypeInfo()
 }
 
 // Decode implements bin.Decoder for HelpUserInfoBox.

@@ -517,12 +517,15 @@ type StatsGraphClass interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() StatsGraphClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -567,6 +570,11 @@ func DecodeStatsGraph(buf *bin.Buffer) (StatsGraphClass, error) {
 // StatsGraph boxes the StatsGraphClass providing a helper.
 type StatsGraphBox struct {
 	StatsGraph StatsGraphClass
+}
+
+// TypeInfo implements tdp.Object for StatsGraphBox.
+func (b *StatsGraphBox) TypeInfo() tdp.Type {
+	return b.StatsGraph.TypeInfo()
 }
 
 // Decode implements bin.Decoder for StatsGraphBox.

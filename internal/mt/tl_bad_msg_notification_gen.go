@@ -424,12 +424,15 @@ type BadMsgNotificationClass interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() BadMsgNotificationClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -476,6 +479,11 @@ func DecodeBadMsgNotification(buf *bin.Buffer) (BadMsgNotificationClass, error) 
 // BadMsgNotification boxes the BadMsgNotificationClass providing a helper.
 type BadMsgNotificationBox struct {
 	BadMsgNotification BadMsgNotificationClass
+}
+
+// TypeInfo implements tdp.Object for BadMsgNotificationBox.
+func (b *BadMsgNotificationBox) TypeInfo() tdp.Type {
+	return b.BadMsgNotification.TypeInfo()
 }
 
 // Decode implements bin.Decoder for BadMsgNotificationBox.

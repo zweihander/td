@@ -341,12 +341,15 @@ type MessagesSentEncryptedMessageClass interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() MessagesSentEncryptedMessageClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -387,6 +390,11 @@ func DecodeMessagesSentEncryptedMessage(buf *bin.Buffer) (MessagesSentEncryptedM
 // MessagesSentEncryptedMessage boxes the MessagesSentEncryptedMessageClass providing a helper.
 type MessagesSentEncryptedMessageBox struct {
 	SentEncryptedMessage MessagesSentEncryptedMessageClass
+}
+
+// TypeInfo implements tdp.Object for MessagesSentEncryptedMessageBox.
+func (b *MessagesSentEncryptedMessageBox) TypeInfo() tdp.Type {
+	return b.SentEncryptedMessage.TypeInfo()
 }
 
 // Decode implements bin.Decoder for MessagesSentEncryptedMessageBox.

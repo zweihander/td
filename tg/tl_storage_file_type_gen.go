@@ -1076,12 +1076,15 @@ type StorageFileTypeClass interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() StorageFileTypeClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -1175,6 +1178,11 @@ func DecodeStorageFileType(buf *bin.Buffer) (StorageFileTypeClass, error) {
 // StorageFileType boxes the StorageFileTypeClass providing a helper.
 type StorageFileTypeBox struct {
 	FileType StorageFileTypeClass
+}
+
+// TypeInfo implements tdp.Object for StorageFileTypeBox.
+func (b *StorageFileTypeBox) TypeInfo() tdp.Type {
+	return b.FileType.TypeInfo()
 }
 
 // Decode implements bin.Decoder for StorageFileTypeBox.

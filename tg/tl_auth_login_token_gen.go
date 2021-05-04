@@ -501,12 +501,15 @@ type AuthLoginTokenClass interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() AuthLoginTokenClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -551,6 +554,11 @@ func DecodeAuthLoginToken(buf *bin.Buffer) (AuthLoginTokenClass, error) {
 // AuthLoginToken boxes the AuthLoginTokenClass providing a helper.
 type AuthLoginTokenBox struct {
 	LoginToken AuthLoginTokenClass
+}
+
+// TypeInfo implements tdp.Object for AuthLoginTokenBox.
+func (b *AuthLoginTokenBox) TypeInfo() tdp.Type {
+	return b.LoginToken.TypeInfo()
 }
 
 // Decode implements bin.Decoder for AuthLoginTokenBox.

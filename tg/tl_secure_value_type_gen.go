@@ -1391,12 +1391,15 @@ type SecureValueTypeClass interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() SecureValueTypeClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -1511,6 +1514,11 @@ func DecodeSecureValueType(buf *bin.Buffer) (SecureValueTypeClass, error) {
 // SecureValueType boxes the SecureValueTypeClass providing a helper.
 type SecureValueTypeBox struct {
 	SecureValueType SecureValueTypeClass
+}
+
+// TypeInfo implements tdp.Object for SecureValueTypeBox.
+func (b *SecureValueTypeBox) TypeInfo() tdp.Type {
+	return b.SecureValueType.TypeInfo()
 }
 
 // Decode implements bin.Decoder for SecureValueTypeBox.

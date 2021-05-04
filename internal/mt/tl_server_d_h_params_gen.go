@@ -400,12 +400,15 @@ type ServerDHParamsClass interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() ServerDHParamsClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -449,6 +452,11 @@ func DecodeServerDHParams(buf *bin.Buffer) (ServerDHParamsClass, error) {
 // ServerDHParams boxes the ServerDHParamsClass providing a helper.
 type ServerDHParamsBox struct {
 	Server_DH_Params ServerDHParamsClass
+}
+
+// TypeInfo implements tdp.Object for ServerDHParamsBox.
+func (b *ServerDHParamsBox) TypeInfo() tdp.Type {
+	return b.Server_DH_Params.TypeInfo()
 }
 
 // Decode implements bin.Decoder for ServerDHParamsBox.

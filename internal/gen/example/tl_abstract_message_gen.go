@@ -860,12 +860,15 @@ type AbstractMessageClass interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() AbstractMessageClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -924,6 +927,11 @@ func DecodeAbstractMessage(buf *bin.Buffer) (AbstractMessageClass, error) {
 // AbstractMessage boxes the AbstractMessageClass providing a helper.
 type AbstractMessageBox struct {
 	AbstractMessage AbstractMessageClass
+}
+
+// TypeInfo implements tdp.Object for AbstractMessageBox.
+func (b *AbstractMessageBox) TypeInfo() tdp.Type {
+	return b.AbstractMessage.TypeInfo()
 }
 
 // Decode implements bin.Decoder for AbstractMessageBox.

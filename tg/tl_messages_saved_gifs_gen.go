@@ -328,12 +328,15 @@ type MessagesSavedGifsClass interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() MessagesSavedGifsClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -384,6 +387,11 @@ func DecodeMessagesSavedGifs(buf *bin.Buffer) (MessagesSavedGifsClass, error) {
 // MessagesSavedGifs boxes the MessagesSavedGifsClass providing a helper.
 type MessagesSavedGifsBox struct {
 	SavedGifs MessagesSavedGifsClass
+}
+
+// TypeInfo implements tdp.Object for MessagesSavedGifsBox.
+func (b *MessagesSavedGifsBox) TypeInfo() tdp.Type {
+	return b.SavedGifs.TypeInfo()
 }
 
 // Decode implements bin.Decoder for MessagesSavedGifsBox.

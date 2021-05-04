@@ -372,12 +372,15 @@ type PasswordKdfAlgoClass interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() PasswordKdfAlgoClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -415,6 +418,11 @@ func DecodePasswordKdfAlgo(buf *bin.Buffer) (PasswordKdfAlgoClass, error) {
 // PasswordKdfAlgo boxes the PasswordKdfAlgoClass providing a helper.
 type PasswordKdfAlgoBox struct {
 	PasswordKdfAlgo PasswordKdfAlgoClass
+}
+
+// TypeInfo implements tdp.Object for PasswordKdfAlgoBox.
+func (b *PasswordKdfAlgoBox) TypeInfo() tdp.Type {
+	return b.PasswordKdfAlgo.TypeInfo()
 }
 
 // Decode implements bin.Decoder for PasswordKdfAlgoBox.

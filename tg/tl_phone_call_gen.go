@@ -1981,12 +1981,15 @@ type PhoneCallClass interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() PhoneCallClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -2016,12 +2019,15 @@ type NotEmptyPhoneCall interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() PhoneCallClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -2129,6 +2135,11 @@ func DecodePhoneCall(buf *bin.Buffer) (PhoneCallClass, error) {
 // PhoneCall boxes the PhoneCallClass providing a helper.
 type PhoneCallBox struct {
 	PhoneCall PhoneCallClass
+}
+
+// TypeInfo implements tdp.Object for PhoneCallBox.
+func (b *PhoneCallBox) TypeInfo() tdp.Type {
+	return b.PhoneCall.TypeInfo()
 }
 
 // Decode implements bin.Decoder for PhoneCallBox.

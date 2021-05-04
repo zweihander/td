@@ -521,12 +521,15 @@ type WebDocumentClass interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() WebDocumentClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -589,6 +592,11 @@ func DecodeWebDocument(buf *bin.Buffer) (WebDocumentClass, error) {
 // WebDocument boxes the WebDocumentClass providing a helper.
 type WebDocumentBox struct {
 	WebDocument WebDocumentClass
+}
+
+// TypeInfo implements tdp.Object for WebDocumentBox.
+func (b *WebDocumentBox) TypeInfo() tdp.Type {
+	return b.WebDocument.TypeInfo()
 }
 
 // Decode implements bin.Decoder for WebDocumentBox.

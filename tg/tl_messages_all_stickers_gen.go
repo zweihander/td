@@ -320,12 +320,15 @@ type MessagesAllStickersClass interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() MessagesAllStickersClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -376,6 +379,11 @@ func DecodeMessagesAllStickers(buf *bin.Buffer) (MessagesAllStickersClass, error
 // MessagesAllStickers boxes the MessagesAllStickersClass providing a helper.
 type MessagesAllStickersBox struct {
 	AllStickers MessagesAllStickersClass
+}
+
+// TypeInfo implements tdp.Object for MessagesAllStickersBox.
+func (b *MessagesAllStickersBox) TypeInfo() tdp.Type {
+	return b.AllStickers.TypeInfo()
 }
 
 // Decode implements bin.Decoder for MessagesAllStickersBox.
