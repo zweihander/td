@@ -522,6 +522,11 @@ type {{ $f.Func }}Box struct {
     {{ $f.BaseName }} {{ $f.Name }}
 }
 
+// TypeInfo implements tdp.Object for {{ $f.Func }}Box.
+func (b *{{ $f.Func }}Box) TypeInfo() tdp.Type {
+    return b.{{ $f.BaseName }}.TypeInfo()
+}
+
 // Decode implements bin.Decoder for {{ $f.Func }}Box.
 func (b *{{ $f.Func }}Box) Decode(buf *bin.Buffer) error {
     if b == nil {
