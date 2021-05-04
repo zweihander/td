@@ -378,12 +378,15 @@ type EmojiKeywordClass interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() EmojiKeywordClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -427,6 +430,11 @@ func DecodeEmojiKeyword(buf *bin.Buffer) (EmojiKeywordClass, error) {
 // EmojiKeyword boxes the EmojiKeywordClass providing a helper.
 type EmojiKeywordBox struct {
 	EmojiKeyword EmojiKeywordClass
+}
+
+// TypeInfo implements tdp.Object for EmojiKeywordBox.
+func (b *EmojiKeywordBox) TypeInfo() tdp.Type {
+	return b.EmojiKeyword.TypeInfo()
 }
 
 // Decode implements bin.Decoder for EmojiKeywordBox.

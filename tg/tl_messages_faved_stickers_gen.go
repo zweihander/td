@@ -363,12 +363,15 @@ type MessagesFavedStickersClass interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() MessagesFavedStickersClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -419,6 +422,11 @@ func DecodeMessagesFavedStickers(buf *bin.Buffer) (MessagesFavedStickersClass, e
 // MessagesFavedStickers boxes the MessagesFavedStickersClass providing a helper.
 type MessagesFavedStickersBox struct {
 	FavedStickers MessagesFavedStickersClass
+}
+
+// TypeInfo implements tdp.Object for MessagesFavedStickersBox.
+func (b *MessagesFavedStickersBox) TypeInfo() tdp.Type {
+	return b.FavedStickers.TypeInfo()
 }
 
 // Decode implements bin.Decoder for MessagesFavedStickersBox.

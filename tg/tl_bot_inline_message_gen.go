@@ -1941,12 +1941,15 @@ type BotInlineMessageClass interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() BotInlineMessageClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -2015,6 +2018,11 @@ func DecodeBotInlineMessage(buf *bin.Buffer) (BotInlineMessageClass, error) {
 // BotInlineMessage boxes the BotInlineMessageClass providing a helper.
 type BotInlineMessageBox struct {
 	BotInlineMessage BotInlineMessageClass
+}
+
+// TypeInfo implements tdp.Object for BotInlineMessageBox.
+func (b *BotInlineMessageBox) TypeInfo() tdp.Type {
+	return b.BotInlineMessage.TypeInfo()
 }
 
 // Decode implements bin.Decoder for BotInlineMessageBox.

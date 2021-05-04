@@ -382,12 +382,15 @@ type IPPortClass interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() IPPortClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -431,6 +434,11 @@ func DecodeIPPort(buf *bin.Buffer) (IPPortClass, error) {
 // IPPort boxes the IPPortClass providing a helper.
 type IPPortBox struct {
 	IpPort IPPortClass
+}
+
+// TypeInfo implements tdp.Object for IPPortBox.
+func (b *IPPortBox) TypeInfo() tdp.Type {
+	return b.IpPort.TypeInfo()
 }
 
 // Decode implements bin.Decoder for IPPortBox.

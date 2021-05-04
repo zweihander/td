@@ -2057,12 +2057,15 @@ type KeyboardButtonClass interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() KeyboardButtonClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -2166,6 +2169,11 @@ func DecodeKeyboardButton(buf *bin.Buffer) (KeyboardButtonClass, error) {
 // KeyboardButton boxes the KeyboardButtonClass providing a helper.
 type KeyboardButtonBox struct {
 	KeyboardButton KeyboardButtonClass
+}
+
+// TypeInfo implements tdp.Object for KeyboardButtonBox.
+func (b *KeyboardButtonBox) TypeInfo() tdp.Type {
+	return b.KeyboardButton.TypeInfo()
 }
 
 // Decode implements bin.Decoder for KeyboardButtonBox.

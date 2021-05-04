@@ -336,12 +336,15 @@ type PageListItemClass interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() PageListItemClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -379,6 +382,11 @@ func DecodePageListItem(buf *bin.Buffer) (PageListItemClass, error) {
 // PageListItem boxes the PageListItemClass providing a helper.
 type PageListItemBox struct {
 	PageListItem PageListItemClass
+}
+
+// TypeInfo implements tdp.Object for PageListItemBox.
+func (b *PageListItemBox) TypeInfo() tdp.Type {
+	return b.PageListItem.TypeInfo()
 }
 
 // Decode implements bin.Decoder for PageListItemBox.

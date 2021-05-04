@@ -3635,12 +3635,15 @@ type InputMediaClass interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() InputMediaClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -3769,6 +3772,11 @@ func DecodeInputMedia(buf *bin.Buffer) (InputMediaClass, error) {
 // InputMedia boxes the InputMediaClass providing a helper.
 type InputMediaBox struct {
 	InputMedia InputMediaClass
+}
+
+// TypeInfo implements tdp.Object for InputMediaBox.
+func (b *InputMediaBox) TypeInfo() tdp.Type {
+	return b.InputMedia.TypeInfo()
 }
 
 // Decode implements bin.Decoder for InputMediaBox.

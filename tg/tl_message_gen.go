@@ -2063,12 +2063,15 @@ type MessageClass interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() MessageClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -2105,12 +2108,15 @@ type NotEmptyMessage interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() MessageClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -2212,6 +2218,11 @@ func DecodeMessage(buf *bin.Buffer) (MessageClass, error) {
 // Message boxes the MessageClass providing a helper.
 type MessageBox struct {
 	Message MessageClass
+}
+
+// TypeInfo implements tdp.Object for MessageBox.
+func (b *MessageBox) TypeInfo() tdp.Type {
+	return b.Message.TypeInfo()
 }
 
 // Decode implements bin.Decoder for MessageBox.

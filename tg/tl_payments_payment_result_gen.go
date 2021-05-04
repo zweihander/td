@@ -317,12 +317,15 @@ type PaymentsPaymentResultClass interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() PaymentsPaymentResultClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -360,6 +363,11 @@ func DecodePaymentsPaymentResult(buf *bin.Buffer) (PaymentsPaymentResultClass, e
 // PaymentsPaymentResult boxes the PaymentsPaymentResultClass providing a helper.
 type PaymentsPaymentResultBox struct {
 	PaymentResult PaymentsPaymentResultClass
+}
+
+// TypeInfo implements tdp.Object for PaymentsPaymentResultBox.
+func (b *PaymentsPaymentResultBox) TypeInfo() tdp.Type {
+	return b.PaymentResult.TypeInfo()
 }
 
 // Decode implements bin.Decoder for PaymentsPaymentResultBox.

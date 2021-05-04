@@ -2676,12 +2676,15 @@ type UpdatesClass interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() UpdatesClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -2754,6 +2757,11 @@ func DecodeUpdates(buf *bin.Buffer) (UpdatesClass, error) {
 // Updates boxes the UpdatesClass providing a helper.
 type UpdatesBox struct {
 	Updates UpdatesClass
+}
+
+// TypeInfo implements tdp.Object for UpdatesBox.
+func (b *UpdatesBox) TypeInfo() tdp.Type {
+	return b.Updates.TypeInfo()
 }
 
 // Decode implements bin.Decoder for UpdatesBox.

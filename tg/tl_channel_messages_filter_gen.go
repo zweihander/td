@@ -341,12 +341,15 @@ type ChannelMessagesFilterClass interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() ChannelMessagesFilterClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -397,6 +400,11 @@ func DecodeChannelMessagesFilter(buf *bin.Buffer) (ChannelMessagesFilterClass, e
 // ChannelMessagesFilter boxes the ChannelMessagesFilterClass providing a helper.
 type ChannelMessagesFilterBox struct {
 	ChannelMessagesFilter ChannelMessagesFilterClass
+}
+
+// TypeInfo implements tdp.Object for ChannelMessagesFilterBox.
+func (b *ChannelMessagesFilterBox) TypeInfo() tdp.Type {
+	return b.ChannelMessagesFilter.TypeInfo()
 }
 
 // Decode implements bin.Decoder for ChannelMessagesFilterBox.

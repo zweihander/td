@@ -498,12 +498,15 @@ type InputChannelClass interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() InputChannelClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -521,12 +524,15 @@ type NotEmptyInputChannel interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() InputChannelClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -592,6 +598,11 @@ func DecodeInputChannel(buf *bin.Buffer) (InputChannelClass, error) {
 // InputChannel boxes the InputChannelClass providing a helper.
 type InputChannelBox struct {
 	InputChannel InputChannelClass
+}
+
+// TypeInfo implements tdp.Object for InputChannelBox.
+func (b *InputChannelBox) TypeInfo() tdp.Type {
+	return b.InputChannel.TypeInfo()
 }
 
 // Decode implements bin.Decoder for InputChannelBox.

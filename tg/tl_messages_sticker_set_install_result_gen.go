@@ -306,12 +306,15 @@ type MessagesStickerSetInstallResultClass interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() MessagesStickerSetInstallResultClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -349,6 +352,11 @@ func DecodeMessagesStickerSetInstallResult(buf *bin.Buffer) (MessagesStickerSetI
 // MessagesStickerSetInstallResult boxes the MessagesStickerSetInstallResultClass providing a helper.
 type MessagesStickerSetInstallResultBox struct {
 	StickerSetInstallResult MessagesStickerSetInstallResultClass
+}
+
+// TypeInfo implements tdp.Object for MessagesStickerSetInstallResultBox.
+func (b *MessagesStickerSetInstallResultBox) TypeInfo() tdp.Type {
+	return b.StickerSetInstallResult.TypeInfo()
 }
 
 // Decode implements bin.Decoder for MessagesStickerSetInstallResultBox.

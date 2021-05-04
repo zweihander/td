@@ -561,12 +561,15 @@ type PhotoClass interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() PhotoClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -640,6 +643,11 @@ func DecodePhoto(buf *bin.Buffer) (PhotoClass, error) {
 // Photo boxes the PhotoClass providing a helper.
 type PhotoBox struct {
 	Photo PhotoClass
+}
+
+// TypeInfo implements tdp.Object for PhotoBox.
+func (b *PhotoBox) TypeInfo() tdp.Type {
+	return b.Photo.TypeInfo()
 }
 
 // Decode implements bin.Decoder for PhotoBox.

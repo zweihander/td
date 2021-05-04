@@ -490,12 +490,15 @@ type UploadFileClass interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() UploadFileClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -533,6 +536,11 @@ func DecodeUploadFile(buf *bin.Buffer) (UploadFileClass, error) {
 // UploadFile boxes the UploadFileClass providing a helper.
 type UploadFileBox struct {
 	File UploadFileClass
+}
+
+// TypeInfo implements tdp.Object for UploadFileBox.
+func (b *UploadFileBox) TypeInfo() tdp.Type {
+	return b.File.TypeInfo()
 }
 
 // Decode implements bin.Decoder for UploadFileBox.

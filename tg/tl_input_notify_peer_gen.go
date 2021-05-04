@@ -496,12 +496,15 @@ type InputNotifyPeerClass interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() InputNotifyPeerClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -553,6 +556,11 @@ func DecodeInputNotifyPeer(buf *bin.Buffer) (InputNotifyPeerClass, error) {
 // InputNotifyPeer boxes the InputNotifyPeerClass providing a helper.
 type InputNotifyPeerBox struct {
 	InputNotifyPeer InputNotifyPeerClass
+}
+
+// TypeInfo implements tdp.Object for InputNotifyPeerBox.
+func (b *InputNotifyPeerBox) TypeInfo() tdp.Type {
+	return b.InputNotifyPeer.TypeInfo()
 }
 
 // Decode implements bin.Decoder for InputNotifyPeerBox.

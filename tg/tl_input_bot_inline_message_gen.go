@@ -2180,12 +2180,15 @@ type InputBotInlineMessageClass interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() InputBotInlineMessageClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -2261,6 +2264,11 @@ func DecodeInputBotInlineMessage(buf *bin.Buffer) (InputBotInlineMessageClass, e
 // InputBotInlineMessage boxes the InputBotInlineMessageClass providing a helper.
 type InputBotInlineMessageBox struct {
 	InputBotInlineMessage InputBotInlineMessageClass
+}
+
+// TypeInfo implements tdp.Object for InputBotInlineMessageBox.
+func (b *InputBotInlineMessageBox) TypeInfo() tdp.Type {
+	return b.InputBotInlineMessage.TypeInfo()
 }
 
 // Decode implements bin.Decoder for InputBotInlineMessageBox.

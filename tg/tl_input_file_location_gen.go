@@ -1927,12 +1927,15 @@ type InputFileLocationClass interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() InputFileLocationClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -2026,6 +2029,11 @@ func DecodeInputFileLocation(buf *bin.Buffer) (InputFileLocationClass, error) {
 // InputFileLocation boxes the InputFileLocationClass providing a helper.
 type InputFileLocationBox struct {
 	InputFileLocation InputFileLocationClass
+}
+
+// TypeInfo implements tdp.Object for InputFileLocationBox.
+func (b *InputFileLocationBox) TypeInfo() tdp.Type {
+	return b.InputFileLocation.TypeInfo()
 }
 
 // Decode implements bin.Decoder for InputFileLocationBox.

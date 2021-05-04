@@ -282,12 +282,15 @@ type InputStickerSetClass interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() InputStickerSetClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -338,6 +341,11 @@ func DecodeInputStickerSet(buf *bin.Buffer) (InputStickerSetClass, error) {
 // InputStickerSet boxes the InputStickerSetClass providing a helper.
 type InputStickerSetBox struct {
 	InputStickerSet InputStickerSetClass
+}
+
+// TypeInfo implements tdp.Object for InputStickerSetBox.
+func (b *InputStickerSetBox) TypeInfo() tdp.Type {
+	return b.InputStickerSet.TypeInfo()
 }
 
 // Decode implements bin.Decoder for InputStickerSetBox.

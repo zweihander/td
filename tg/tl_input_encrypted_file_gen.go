@@ -706,12 +706,15 @@ type InputEncryptedFileClass interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() InputEncryptedFileClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -738,12 +741,15 @@ type NotEmptyInputEncryptedFile interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() InputEncryptedFileClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -822,6 +828,11 @@ func DecodeInputEncryptedFile(buf *bin.Buffer) (InputEncryptedFileClass, error) 
 // InputEncryptedFile boxes the InputEncryptedFileClass providing a helper.
 type InputEncryptedFileBox struct {
 	InputEncryptedFile InputEncryptedFileClass
+}
+
+// TypeInfo implements tdp.Object for InputEncryptedFileBox.
+func (b *InputEncryptedFileBox) TypeInfo() tdp.Type {
+	return b.InputEncryptedFile.TypeInfo()
 }
 
 // Decode implements bin.Decoder for InputEncryptedFileBox.

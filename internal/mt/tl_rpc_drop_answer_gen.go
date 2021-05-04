@@ -422,12 +422,15 @@ type RPCDropAnswerClass interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() RPCDropAnswerClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -472,6 +475,11 @@ func DecodeRPCDropAnswer(buf *bin.Buffer) (RPCDropAnswerClass, error) {
 // RPCDropAnswer boxes the RPCDropAnswerClass providing a helper.
 type RPCDropAnswerBox struct {
 	RpcDropAnswer RPCDropAnswerClass
+}
+
+// TypeInfo implements tdp.Object for RPCDropAnswerBox.
+func (b *RPCDropAnswerBox) TypeInfo() tdp.Type {
+	return b.RpcDropAnswer.TypeInfo()
 }
 
 // Decode implements bin.Decoder for RPCDropAnswerBox.

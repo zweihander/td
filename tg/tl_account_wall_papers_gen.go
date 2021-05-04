@@ -328,12 +328,15 @@ type AccountWallPapersClass interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() AccountWallPapersClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -384,6 +387,11 @@ func DecodeAccountWallPapers(buf *bin.Buffer) (AccountWallPapersClass, error) {
 // AccountWallPapers boxes the AccountWallPapersClass providing a helper.
 type AccountWallPapersBox struct {
 	WallPapers AccountWallPapersClass
+}
+
+// TypeInfo implements tdp.Object for AccountWallPapersBox.
+func (b *AccountWallPapersBox) TypeInfo() tdp.Type {
+	return b.WallPapers.TypeInfo()
 }
 
 // Decode implements bin.Decoder for AccountWallPapersBox.

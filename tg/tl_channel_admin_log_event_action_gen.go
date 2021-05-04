@@ -4721,12 +4721,15 @@ type ChannelAdminLogEventActionClass interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() ChannelAdminLogEventActionClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -4974,6 +4977,11 @@ func DecodeChannelAdminLogEventAction(buf *bin.Buffer) (ChannelAdminLogEventActi
 // ChannelAdminLogEventAction boxes the ChannelAdminLogEventActionClass providing a helper.
 type ChannelAdminLogEventActionBox struct {
 	ChannelAdminLogEventAction ChannelAdminLogEventActionClass
+}
+
+// TypeInfo implements tdp.Object for ChannelAdminLogEventActionBox.
+func (b *ChannelAdminLogEventActionBox) TypeInfo() tdp.Type {
+	return b.ChannelAdminLogEventAction.TypeInfo()
 }
 
 // Decode implements bin.Decoder for ChannelAdminLogEventActionBox.

@@ -1385,12 +1385,15 @@ type WebPageClass interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() WebPageClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -1408,12 +1411,15 @@ type ModifiedWebPage interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() WebPageClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -1492,6 +1498,11 @@ func DecodeWebPage(buf *bin.Buffer) (WebPageClass, error) {
 // WebPage boxes the WebPageClass providing a helper.
 type WebPageBox struct {
 	WebPage WebPageClass
+}
+
+// TypeInfo implements tdp.Object for WebPageBox.
+func (b *WebPageBox) TypeInfo() tdp.Type {
+	return b.WebPage.TypeInfo()
 }
 
 // Decode implements bin.Decoder for WebPageBox.

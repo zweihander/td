@@ -1187,12 +1187,15 @@ type EncryptedChatClass interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() EncryptedChatClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -1222,12 +1225,15 @@ type NotEmptyEncryptedChat interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() EncryptedChatClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -1319,6 +1325,11 @@ func DecodeEncryptedChat(buf *bin.Buffer) (EncryptedChatClass, error) {
 // EncryptedChat boxes the EncryptedChatClass providing a helper.
 type EncryptedChatBox struct {
 	EncryptedChat EncryptedChatClass
+}
+
+// TypeInfo implements tdp.Object for EncryptedChatBox.
+func (b *EncryptedChatBox) TypeInfo() tdp.Type {
+	return b.EncryptedChat.TypeInfo()
 }
 
 // Decode implements bin.Decoder for EncryptedChatBox.

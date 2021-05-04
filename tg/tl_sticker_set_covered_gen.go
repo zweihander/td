@@ -384,12 +384,15 @@ type StickerSetCoveredClass interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() StickerSetCoveredClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -430,6 +433,11 @@ func DecodeStickerSetCovered(buf *bin.Buffer) (StickerSetCoveredClass, error) {
 // StickerSetCovered boxes the StickerSetCoveredClass providing a helper.
 type StickerSetCoveredBox struct {
 	StickerSetCovered StickerSetCoveredClass
+}
+
+// TypeInfo implements tdp.Object for StickerSetCoveredBox.
+func (b *StickerSetCoveredBox) TypeInfo() tdp.Type {
+	return b.StickerSetCovered.TypeInfo()
 }
 
 // Decode implements bin.Decoder for StickerSetCoveredBox.

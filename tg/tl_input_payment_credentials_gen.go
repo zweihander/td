@@ -649,12 +649,15 @@ type InputPaymentCredentialsClass interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() InputPaymentCredentialsClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -706,6 +709,11 @@ func DecodeInputPaymentCredentials(buf *bin.Buffer) (InputPaymentCredentialsClas
 // InputPaymentCredentials boxes the InputPaymentCredentialsClass providing a helper.
 type InputPaymentCredentialsBox struct {
 	InputPaymentCredentials InputPaymentCredentialsClass
+}
+
+// TypeInfo implements tdp.Object for InputPaymentCredentialsBox.
+func (b *InputPaymentCredentialsBox) TypeInfo() tdp.Type {
+	return b.InputPaymentCredentials.TypeInfo()
 }
 
 // Decode implements bin.Decoder for InputPaymentCredentialsBox.

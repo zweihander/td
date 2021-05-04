@@ -757,12 +757,15 @@ type ChatInviteClass interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() ChatInviteClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -807,6 +810,11 @@ func DecodeChatInvite(buf *bin.Buffer) (ChatInviteClass, error) {
 // ChatInvite boxes the ChatInviteClass providing a helper.
 type ChatInviteBox struct {
 	ChatInvite ChatInviteClass
+}
+
+// TypeInfo implements tdp.Object for ChatInviteBox.
+func (b *ChatInviteBox) TypeInfo() tdp.Type {
+	return b.ChatInvite.TypeInfo()
 }
 
 // Decode implements bin.Decoder for ChatInviteBox.

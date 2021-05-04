@@ -367,12 +367,15 @@ type InputGeoPointClass interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() InputGeoPointClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -423,6 +426,11 @@ func DecodeInputGeoPoint(buf *bin.Buffer) (InputGeoPointClass, error) {
 // InputGeoPoint boxes the InputGeoPointClass providing a helper.
 type InputGeoPointBox struct {
 	InputGeoPoint InputGeoPointClass
+}
+
+// TypeInfo implements tdp.Object for InputGeoPointBox.
+func (b *InputGeoPointBox) TypeInfo() tdp.Type {
+	return b.InputGeoPoint.TypeInfo()
 }
 
 // Decode implements bin.Decoder for InputGeoPointBox.

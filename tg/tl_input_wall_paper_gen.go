@@ -439,12 +439,15 @@ type InputWallPaperClass interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() InputWallPaperClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -489,6 +492,11 @@ func DecodeInputWallPaper(buf *bin.Buffer) (InputWallPaperClass, error) {
 // InputWallPaper boxes the InputWallPaperClass providing a helper.
 type InputWallPaperBox struct {
 	InputWallPaper InputWallPaperClass
+}
+
+// TypeInfo implements tdp.Object for InputWallPaperBox.
+func (b *InputWallPaperBox) TypeInfo() tdp.Type {
+	return b.InputWallPaper.TypeInfo()
 }
 
 // Decode implements bin.Decoder for InputWallPaperBox.

@@ -1854,12 +1854,15 @@ type DecryptedMessageActionClass interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() DecryptedMessageActionClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -1974,6 +1977,11 @@ func DecodeDecryptedMessageAction(buf *bin.Buffer) (DecryptedMessageActionClass,
 // DecryptedMessageAction boxes the DecryptedMessageActionClass providing a helper.
 type DecryptedMessageActionBox struct {
 	DecryptedMessageAction DecryptedMessageActionClass
+}
+
+// TypeInfo implements tdp.Object for DecryptedMessageActionBox.
+func (b *DecryptedMessageActionBox) TypeInfo() tdp.Type {
+	return b.DecryptedMessageAction.TypeInfo()
 }
 
 // Decode implements bin.Decoder for DecryptedMessageActionBox.

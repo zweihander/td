@@ -417,12 +417,15 @@ type SecurePasswordKdfAlgoClass interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() SecurePasswordKdfAlgoClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -467,6 +470,11 @@ func DecodeSecurePasswordKdfAlgo(buf *bin.Buffer) (SecurePasswordKdfAlgoClass, e
 // SecurePasswordKdfAlgo boxes the SecurePasswordKdfAlgoClass providing a helper.
 type SecurePasswordKdfAlgoBox struct {
 	SecurePasswordKdfAlgo SecurePasswordKdfAlgoClass
+}
+
+// TypeInfo implements tdp.Object for SecurePasswordKdfAlgoBox.
+func (b *SecurePasswordKdfAlgoBox) TypeInfo() tdp.Type {
+	return b.SecurePasswordKdfAlgo.TypeInfo()
 }
 
 // Decode implements bin.Decoder for SecurePasswordKdfAlgoBox.

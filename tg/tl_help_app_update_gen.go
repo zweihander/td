@@ -519,12 +519,15 @@ type HelpAppUpdateClass interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() HelpAppUpdateClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -562,6 +565,11 @@ func DecodeHelpAppUpdate(buf *bin.Buffer) (HelpAppUpdateClass, error) {
 // HelpAppUpdate boxes the HelpAppUpdateClass providing a helper.
 type HelpAppUpdateBox struct {
 	AppUpdate HelpAppUpdateClass
+}
+
+// TypeInfo implements tdp.Object for HelpAppUpdateBox.
+func (b *HelpAppUpdateBox) TypeInfo() tdp.Type {
+	return b.AppUpdate.TypeInfo()
 }
 
 // Decode implements bin.Decoder for HelpAppUpdateBox.

@@ -885,12 +885,15 @@ type BotInlineResultClass interface {
 	bin.Decoder
 	bin.BareEncoder
 	bin.BareDecoder
+	tdp.Object
 	construct() BotInlineResultClass
 
 	// TypeID returns type id in TL schema.
 	//
 	// See https://core.telegram.org/mtproto/TL-tl#remarks.
 	TypeID() uint32
+	// TypeInfo returns TL type info.
+	TypeInfo() tdp.Type
 	// TypeName returns name of type in TL schema.
 	TypeName() string
 	// String implements fmt.Stringer.
@@ -946,6 +949,11 @@ func DecodeBotInlineResult(buf *bin.Buffer) (BotInlineResultClass, error) {
 // BotInlineResult boxes the BotInlineResultClass providing a helper.
 type BotInlineResultBox struct {
 	BotInlineResult BotInlineResultClass
+}
+
+// TypeInfo implements tdp.Object for BotInlineResultBox.
+func (b *BotInlineResultBox) TypeInfo() tdp.Type {
+	return b.BotInlineResult.TypeInfo()
 }
 
 // Decode implements bin.Decoder for BotInlineResultBox.
