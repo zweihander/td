@@ -2,8 +2,8 @@
 //
 // Source: https://raw.githubusercontent.com/telegramdesktop/tdesktop/dev/Telegram/Resources/tl/api.tl
 // Merge:  _schema/help_config_simple.tl
-// Layer:  129
-// SHA256: 70452667e1d9a77db09dc9553959a3e769ca9800e3f6719d699293fc162cce06
+// Layer:  131
+// SHA256: 0bd2a4fb03ca4f8854ae39135e914ab631e6d46f789c48b1c688200e09125c55
 
 boolFalse#bc799737 = Bool;
 
@@ -317,7 +317,7 @@ peerSettings#733f2961 flags:# report_spam:flags.0?true add_contact:flags.1?true 
 
 wallPaper#a437c3ed id:long flags:# creator:flags.0?true default:flags.1?true pattern:flags.3?true dark:flags.4?true access_hash:long slug:string document:Document settings:flags.2?WallPaperSettings = WallPaper;
 
-wallPaperNoFile#8af40b25 flags:# default:flags.1?true dark:flags.4?true settings:flags.2?WallPaperSettings = WallPaper;
+wallPaperNoFile#e0804116 id:long flags:# default:flags.1?true dark:flags.4?true settings:flags.2?WallPaperSettings = WallPaper;
 
 inputReportReasonSpam#58dbcab8 = ReportReason;
 
@@ -593,6 +593,8 @@ updateBotStopped#7f9488a user_id:int date:int stopped:Bool qts:int = Update;
 
 updateGroupCallConnection#b783982 flags:# presentation:flags.0?true params:DataJSON = Update;
 
+updateBotCommands#cf7e0873 peer:Peer bot_id:int commands:Vector<BotCommand> = Update;
+
 updates.state#a56c2a3e pts:int qts:int date:int seq:int unread_count:int = updates.State;
 
 updates.differenceEmpty#5d75a138 date:int seq:int = updates.Difference;
@@ -831,7 +833,7 @@ authorization#ad01d61d flags:# current:flags.0?true official_app:flags.1?true pa
 
 account.authorizations#1250abde authorizations:Vector<Authorization> = account.Authorizations;
 
-account.password#ad2641f8 flags:# has_recovery:flags.0?true has_secure_values:flags.1?true has_password:flags.2?true current_algo:flags.2?PasswordKdfAlgo srp_B:flags.2?bytes srp_id:flags.2?long hint:flags.3?string email_unconfirmed_pattern:flags.4?string new_algo:PasswordKdfAlgo new_secure_algo:SecurePasswordKdfAlgo secure_random:bytes = account.Password;
+account.password#185b184f flags:# has_recovery:flags.0?true has_secure_values:flags.1?true has_password:flags.2?true current_algo:flags.2?PasswordKdfAlgo srp_B:flags.2?bytes srp_id:flags.2?long hint:flags.3?string email_unconfirmed_pattern:flags.4?string new_algo:PasswordKdfAlgo new_secure_algo:SecurePasswordKdfAlgo secure_random:bytes pending_reset_date:flags.5?int = account.Password;
 
 account.passwordSettings#9a5c33e5 flags:# email:flags.0?string secure_settings:flags.1?SecureSecretSettings = account.PasswordSettings;
 
@@ -893,9 +895,9 @@ keyboardButtonRow#77608b83 buttons:Vector<KeyboardButton> = KeyboardButtonRow;
 
 replyKeyboardHide#a03e5b85 flags:# selective:flags.2?true = ReplyMarkup;
 
-replyKeyboardForceReply#f4108aa0 flags:# single_use:flags.1?true selective:flags.2?true = ReplyMarkup;
+replyKeyboardForceReply#86b40b08 flags:# single_use:flags.1?true selective:flags.2?true placeholder:flags.3?string = ReplyMarkup;
 
-replyKeyboardMarkup#3502758c flags:# resize:flags.0?true single_use:flags.1?true selective:flags.2?true rows:Vector<KeyboardButtonRow> = ReplyMarkup;
+replyKeyboardMarkup#85dd99d1 flags:# resize:flags.0?true single_use:flags.1?true selective:flags.2?true rows:Vector<KeyboardButtonRow> placeholder:flags.3?string = ReplyMarkup;
 
 replyInlineMarkup#48a30254 rows:Vector<KeyboardButtonRow> = ReplyMarkup;
 
@@ -1603,7 +1605,7 @@ inputWallPaper#e630b979 id:long access_hash:long = InputWallPaper;
 
 inputWallPaperSlug#72091c80 slug:string = InputWallPaper;
 
-inputWallPaperNoFile#8427bbac = InputWallPaper;
+inputWallPaperNoFile#967a462e id:long = InputWallPaper;
 
 account.wallPapersNotModified#1c199183 = account.WallPapers;
 
@@ -1759,11 +1761,11 @@ stats.messageStats#8999f295 views_graph:StatsGraph = stats.MessageStats;
 
 groupCallDiscarded#7780bcb4 id:long access_hash:long duration:int = GroupCall;
 
-groupCall#653dbaad flags:# join_muted:flags.1?true can_change_join_muted:flags.2?true join_date_asc:flags.6?true schedule_start_subscribed:flags.8?true can_start_video:flags.9?true id:long access_hash:long participants_count:int title:flags.3?string stream_dc_id:flags.4?int record_start_date:flags.5?int schedule_date:flags.7?int version:int = GroupCall;
+groupCall#d597650c flags:# join_muted:flags.1?true can_change_join_muted:flags.2?true join_date_asc:flags.6?true schedule_start_subscribed:flags.8?true can_start_video:flags.9?true id:long access_hash:long participants_count:int title:flags.3?string stream_dc_id:flags.4?int record_start_date:flags.5?int schedule_date:flags.7?int unmuted_video_count:flags.10?int unmuted_video_limit:int version:int = GroupCall;
 
 inputGroupCall#d8aa840f id:long access_hash:long = InputGroupCall;
 
-groupCallParticipant#a8ba51a7 flags:# muted:flags.0?true left:flags.1?true can_self_unmute:flags.2?true just_joined:flags.4?true versioned:flags.5?true min:flags.8?true muted_by_you:flags.9?true volume_by_admin:flags.10?true self:flags.12?true peer:Peer date:int active_date:flags.3?int source:int volume:flags.7?int about:flags.11?string raise_hand_rating:flags.13?long video:flags.6?DataJSON presentation:flags.14?DataJSON = GroupCallParticipant;
+groupCallParticipant#eba636fe flags:# muted:flags.0?true left:flags.1?true can_self_unmute:flags.2?true just_joined:flags.4?true versioned:flags.5?true min:flags.8?true muted_by_you:flags.9?true volume_by_admin:flags.10?true self:flags.12?true video_joined:flags.15?true peer:Peer date:int active_date:flags.3?int source:int volume:flags.7?int about:flags.11?string raise_hand_rating:flags.13?long video:flags.6?GroupCallParticipantVideo presentation:flags.14?GroupCallParticipantVideo = GroupCallParticipant;
 
 phone.groupCall#9e727aad call:GroupCall participants:Vector<GroupCallParticipant> participants_next_offset:string chats:Vector<Chat> users:Vector<User> = phone.GroupCall;
 
@@ -1805,6 +1807,32 @@ phone.joinAsPeers#afe5623f peers:Vector<Peer> chats:Vector<Chat> users:Vector<Us
 
 phone.exportedGroupCallInvite#204bd158 link:string = phone.ExportedGroupCallInvite;
 
+groupCallParticipantVideoSourceGroup#dcb118b7 semantics:string sources:Vector<int> = GroupCallParticipantVideoSourceGroup;
+
+groupCallParticipantVideo#67753ac8 flags:# paused:flags.0?true endpoint:string source_groups:Vector<GroupCallParticipantVideoSourceGroup> audio_source:flags.1?int = GroupCallParticipantVideo;
+
+stickers.suggestedShortName#85fea03f short_name:string = stickers.SuggestedShortName;
+
+botCommandScopeDefault#2f6cb2ab = BotCommandScope;
+
+botCommandScopeUsers#3c4f04d8 = BotCommandScope;
+
+botCommandScopeChats#6fe1a881 = BotCommandScope;
+
+botCommandScopeChatAdmins#b9aa606a = BotCommandScope;
+
+botCommandScopePeer#db9d897d peer:InputPeer = BotCommandScope;
+
+botCommandScopePeerAdmins#3fd863d1 peer:InputPeer = BotCommandScope;
+
+botCommandScopePeerUser#a1321f3 peer:InputPeer user_id:InputUser = BotCommandScope;
+
+account.resetPasswordFailedWait#e3779861 retry_date:int = account.ResetPasswordResult;
+
+account.resetPasswordRequestedWait#e9effc7d until_date:int = account.ResetPasswordResult;
+
+account.resetPasswordOk#e926d63e = account.ResetPasswordResult;
+
 
 ---functions---
 
@@ -1844,7 +1872,7 @@ auth.checkPassword#d18b4d16 password:InputCheckPasswordSRP = auth.Authorization;
 
 auth.requestPasswordRecovery#d897bc66 = auth.PasswordRecovery;
 
-auth.recoverPassword#4ea56e92 code:string = auth.Authorization;
+auth.recoverPassword#37096c70 flags:# code:string new_settings:flags.0?account.PasswordInputSettings = auth.Authorization;
 
 auth.resendCode#3ef1a9bf phone_number:string phone_code_hash:string = auth.SentCode;
 
@@ -1857,6 +1885,8 @@ auth.exportLoginToken#b1b41517 api_id:int api_hash:string except_ids:Vector<int>
 auth.importLoginToken#95ac5ce4 token:bytes = auth.LoginToken;
 
 auth.acceptLoginToken#e894ad4d token:bytes = Authorization;
+
+auth.checkRecoveryPassword#d36bf79 code:string = Bool;
 
 account.registerDevice#68976c6f flags:# no_muted:flags.0?true token_type:int token:string app_sandbox:Bool secret:bytes other_uids:Vector<int> = Bool;
 
@@ -1993,6 +2023,10 @@ account.getGlobalPrivacySettings#eb2b4cf6 = GlobalPrivacySettings;
 account.setGlobalPrivacySettings#1edaaac2 settings:GlobalPrivacySettings = GlobalPrivacySettings;
 
 account.reportProfilePhoto#fa8cc6f5 peer:InputPeer photo_id:InputPhoto reason:ReportReason message:string = Bool;
+
+account.resetPassword#9308ce1b = account.ResetPasswordResult;
+
+account.declinePasswordReset#4c9409f6 = Bool;
 
 users.getUsers#d91a548 id:Vector<InputUser> = Vector<User>;
 
@@ -2474,7 +2508,11 @@ bots.sendCustomRequest#aa2769ed custom_method:string params:DataJSON = DataJSON;
 
 bots.answerWebhookJSONQuery#e6213f4d query_id:long data:DataJSON = Bool;
 
-bots.setBotCommands#805d46f6 commands:Vector<BotCommand> = Bool;
+bots.setBotCommands#517165a scope:BotCommandScope lang_code:string commands:Vector<BotCommand> = Bool;
+
+bots.resetBotCommands#3d8de0f9 scope:BotCommandScope lang_code:string = Bool;
+
+bots.getBotCommands#e34c0dd6 scope:BotCommandScope lang_code:string = Vector<BotCommand>;
 
 payments.getPaymentForm#8a333c8d flags:# peer:InputPeer msg_id:int theme_params:flags.0?DataJSON = payments.PaymentForm;
 
@@ -2490,7 +2528,7 @@ payments.clearSavedInfo#d83d70c1 flags:# credentials:flags.0?true info:flags.1?t
 
 payments.getBankCardData#2e79d779 number:string = payments.BankCardData;
 
-stickers.createStickerSet#f1036780 flags:# masks:flags.0?true animated:flags.1?true user_id:InputUser title:string short_name:string thumb:flags.2?InputDocument stickers:Vector<InputStickerSetItem> = messages.StickerSet;
+stickers.createStickerSet#9021ab67 flags:# masks:flags.0?true animated:flags.1?true user_id:InputUser title:string short_name:string thumb:flags.2?InputDocument stickers:Vector<InputStickerSetItem> software:flags.3?string = messages.StickerSet;
 
 stickers.removeStickerFromSet#f7760f51 sticker:InputDocument = messages.StickerSet;
 
@@ -2499,6 +2537,10 @@ stickers.changeStickerPosition#ffb6d4ca sticker:InputDocument position:int = mes
 stickers.addStickerToSet#8653febe stickerset:InputStickerSet sticker:InputStickerSetItem = messages.StickerSet;
 
 stickers.setStickerSetThumb#9a364e30 stickerset:InputStickerSet thumb:InputDocument = messages.StickerSet;
+
+stickers.checkShortName#284b3639 short_name:string = Bool;
+
+stickers.suggestShortName#4dafc503 title:string = stickers.SuggestedShortName;
 
 phone.getCallConfig#55451fa9 = DataJSON;
 
@@ -2520,7 +2562,7 @@ phone.sendSignalingData#ff7a9383 peer:InputPhoneCall data:bytes = Bool;
 
 phone.createGroupCall#48cdc6d8 flags:# peer:InputPeer random_id:int title:flags.0?string schedule_date:flags.1?int = Updates;
 
-phone.joinGroupCall#b132ff7b flags:# muted:flags.0?true video_muted:flags.2?true call:InputGroupCall join_as:InputPeer invite_hash:flags.1?string params:DataJSON = Updates;
+phone.joinGroupCall#b132ff7b flags:# muted:flags.0?true video_stopped:flags.2?true call:InputGroupCall join_as:InputPeer invite_hash:flags.1?string params:DataJSON = Updates;
 
 phone.leaveGroupCall#500377f9 call:InputGroupCall source:int = Updates;
 
@@ -2538,7 +2580,7 @@ phone.checkGroupCall#b59cf977 call:InputGroupCall sources:Vector<int> = Vector<i
 
 phone.toggleGroupCallRecord#c02a66d7 flags:# start:flags.0?true call:InputGroupCall title:flags.1?string = Updates;
 
-phone.editGroupCallParticipant#aec610e4 flags:# call:InputGroupCall participant:InputPeer muted:flags.0?Bool volume:flags.1?int raise_hand:flags.2?Bool video_muted:flags.3?Bool = Updates;
+phone.editGroupCallParticipant#a5273abf flags:# call:InputGroupCall participant:InputPeer muted:flags.0?Bool volume:flags.1?int raise_hand:flags.2?Bool video_stopped:flags.3?Bool video_paused:flags.4?Bool presentation_paused:flags.5?Bool = Updates;
 
 phone.editGroupCallTitle#1ca6ac0a call:InputGroupCall title:string = Updates;
 
@@ -2591,4 +2633,4 @@ accessPointRule#4679b65f phone_prefix_rules:string dc_id:int ips:vector<IpPort> 
 
 help.configSimple#5a592a6c date:int expires:int rules:vector<AccessPointRule> = help.ConfigSimple;
 
-// LAYER 129
+// LAYER 131
